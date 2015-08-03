@@ -11,6 +11,7 @@ def hello_world():
 
 @app.route('/stats/<id>/<date1>/<date2>', strict_slashes=False)
 def render_date_range(id, date1, date2):
+    # this is just an example, it doesnt work now
     dt_format = "%Y-%m-%d"
     try:
         date1 = dt.strptime(date1, dt_format)
@@ -18,17 +19,16 @@ def render_date_range(id, date1, date2):
     except:
         return render_template("date_error.html")
 
-## Get and Post a Todo
-@app.route('/todos', strict_slashes=False, methods=('get', 'post'))
+## Post a Todo
+@app.route('/todos', strict_slashes=False, methods=['POST'])
 def todo():
-    title = request.args.get('title')
-    content = request.args.get('content')
+    title = request.form.get('title') # request.form has the post data, request.args has the get data
+    content = request.form.get('content')
     
     ## Create a new todo
     todo = models.Todo(title, content)
     
     ## Connect to the database here
-    ##models.db.create_all()
     models.db.session.add(todo)
     models.db.session.commit()
     
